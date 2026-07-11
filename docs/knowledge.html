@@ -54,6 +54,7 @@
         <tr><td>Amazon DynamoDB</td><td>AWS's managed NoSQL key-value database</td><td>Massive scale, simple lookups by key, flexible schema — not for analytical joins</td></tr>
         <tr><td>Amazon EC2</td><td>Rent virtual servers in AWS by the hour</td><td>When you need a machine in the cloud — budget VPS providers offer the same idea for less</td></tr>
         <tr><td>Amazon S3</td><td>Object storage — files of any type at any scale</td><td>Cheap durable storage for raw files, backups, data lakes. Cheaper S3-compatible clones exist and speak the same API</td></tr>
+        <tr><td>Apache Airflow</td><td>Workflow orchestrator — schedules pipeline tasks as dependency graphs (DAGs) with retries, monitoring, and a UI</td><td>When cron stops being enough: many interdependent tasks, a team that needs visibility, reliability requirements. Cron + scripts is the MVP version of the same job</td></tr>
         <tr><td>Cloud platforms (AWS / GCP / Azure)</td><td>The big three providers of on-demand infrastructure</td><td>Renting compute/storage instead of buying servers; AWS launched the era with S3+EC2 in 2006</td></tr>
       </tbody>
     </table>
@@ -62,6 +63,19 @@
   <h2>Learning log</h2>
   <section id="entries">
     <!-- newest entries inserted at the top by /log-learning -->
+
+    <article class="entry">
+      <header><h3>Reflection — Cheap MVP vs. top-of-the-line tools</h3><time>2026-07-11</time></header>
+
+      <h4>The thought</h4>
+      <p>The new era of data tools offers enormous capability on demand — but in my own experience building quick demos and cheap MVPs as a jr data scientist, most of the workflows those tools sell, I implemented myself with <strong>cron and Python on a rented server</strong>: no Airflow, no managed ingestion service, no external orchestrator. Once a demo is validated, expanding to the heavyweight tools makes sense — for reliability, performance, availability, and security. Neither version is "better": <strong>it depends on where that module is in the application's lifecycle</strong>. Different stages demand different decisions.</p>
+
+      <h4>What the book adds</h4>
+      <p><em>Fundamentals of Data Engineering</em> ch. 4 gives this intuition a vocabulary. (1) <strong>Immutable vs. transitory technologies:</strong> some tech underpins everything and will outlive any hype cycle — object storage, SQL, bash, relational databases, plain servers (the "Lindy effect": the longer something has existed, the longer it will keep existing). Other tech comes and goes with hype waves. Their advice: <em>build on immutables, wrap transitory tools around them, and re-evaluate choices every ~2 years.</em> My cron + Python + relational DB + object-storage MVP is built almost entirely on immutables — that's exactly why it was cheap to build AND is still safe to grow from. (2) <strong>Avoid "bear traps":</strong> inflexible technologies that are easy to get into and painful to escape. Before adopting a big tool, ask what leaving it would cost. (3) <strong>Overarchitecting for an imagined future is a named failure mode</strong> — tooling chosen for the future is often stale by the time that future arrives. Solving for the present with reversible decisions is the disciplined choice, not the lazy one.</p>
+
+      <h4>Takeaway</h4>
+      <p>"Cheap MVP vs. expanded stack" isn't a maturity ladder where the second is the goal. It's the same trade-off the book frames as total cost of ownership vs. opportunity cost, evaluated per module, per lifecycle stage. The skill isn't knowing the fancy tools — it's knowing <em>when</em> a module has earned them.</p>
+    </article>
 
     <article class="entry">
       <header><h3>Module 1 — The Data Engineering Lifecycle &amp; a Brief History</h3><time>2026-07-11</time></header>
