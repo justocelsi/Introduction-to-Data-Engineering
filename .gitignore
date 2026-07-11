@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Environments / secrets
+.env
+*.pem
+*.key
+
+# Data — keep only small samples in git
+exercises/*/data/*
+!exercises/*/data/.gitkeep
+!exercises/*/data/sample*
+
+# Reference books — copyrighted, keep local only
+docs/*.pdf
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Claude Code local settings
+.claude/settings.local.json

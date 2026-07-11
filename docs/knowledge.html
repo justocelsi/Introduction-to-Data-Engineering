@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Engineering — Knowledge Base</title>
+<style>
+  :root {
+    --bg: #fafaf8; --fg: #1a1a1a; --muted: #666; --accent: #0b6e6e;
+    --card: #ffffff; --border: #e2e2dd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #16181a; --fg: #e8e8e6; --muted: #9a9a96; --accent: #4cc2c2;
+            --card: #1e2124; --border: #33373b; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2rem 1rem 4rem;
+    background: var(--bg); color: var(--fg);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { max-width: 46rem; margin: 0 auto; }
+  h1 { font-size: 1.6rem; margin: 0 0 .25rem; }
+  .subtitle { color: var(--muted); margin: 0 0 2rem; }
+  h2 { font-size: 1.15rem; border-bottom: 1px solid var(--border); padding-bottom: .3rem; margin-top: 2.5rem; }
+  .entry {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem 1.25rem; margin: 1rem 0;
+  }
+  .entry header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+  .entry h3 { margin: 0; font-size: 1.05rem; color: var(--accent); }
+  .entry time { color: var(--muted); font-size: .85rem; white-space: nowrap; }
+  .entry h4 { margin: 1rem 0 .25rem; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  .entry p { margin: .25rem 0; }
+  .tablewrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; padding: .5rem .75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  .empty { color: var(--muted); font-style: italic; }
+  code { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 0 .3em; font-size: .9em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Data Engineering — Knowledge Base</h1>
+  <p class="subtitle">Concepts, tools, and takeaways from <em>Introduction to Data Engineering</em> (Coursera) — newest first.</p>
+
+  <h2 id="tools-heading">Tools index</h2>
+  <div class="tablewrap">
+    <table id="tools">
+      <thead><tr><th>Tool</th><th>What it's for</th><th>When to use it</th></tr></thead>
+      <tbody>
+        <!-- one <tr> per tool; keep alphabetical; update rows in place, no duplicates -->
+        <tr><td>Amazon DynamoDB</td><td>AWS's managed NoSQL key-value database</td><td>Massive scale, simple lookups by key, flexible schema — not for analytical joins</td></tr>
+        <tr><td>Amazon EC2</td><td>Rent virtual servers in AWS by the hour</td><td>When you need a machine in the cloud — budget VPS providers offer the same idea for less</td></tr>
+        <tr><td>Amazon S3</td><td>Object storage — files of any type at any scale</td><td>Cheap durable storage for raw files, backups, data lakes. Cheaper S3-compatible clones exist and speak the same API</td></tr>
+        <tr><td>Cloud platforms (AWS / GCP / Azure)</td><td>The big three providers of on-demand infrastructure</td><td>Renting compute/storage instead of buying servers; AWS launched the era with S3+EC2 in 2006</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Learning log</h2>
+  <section id="entries">
+    <!-- newest entries inserted at the top by /log-learning -->
+
+    <article class="entry">
+      <header><h3>Module 1 — The Data Engineering Lifecycle &amp; a Brief History</h3><time>2026-07-11</time></header>
+
+      <h4>Concepts</h4>
+      <p>The <strong>data engineering lifecycle</strong> has five stages: <strong>generation</strong> (source systems produce data), <strong>ingestion</strong> (getting it out of the sources), <strong>transformation</strong> (making it useful), and <strong>serving</strong> (delivering it to consumers) — all sitting on top of <strong>storage</strong>, which isn't really a stage but a foundation that runs under everything. Serving feeds three kinds of consumers: <strong>analytics</strong> (dashboards, BI), <strong>ML</strong>, and <strong>reverse ETL</strong> — pushing processed data back into operational systems (e.g. uploading computed metrics back into a CRM or ads platform), which restarts the cycle. A pipeline is the whole lifecycle end to end.</p>
+      <p>The <strong>undercurrents</strong> are not stages — they're always present under every stage: security, data management, DataOps, data architecture, orchestration, and software engineering.</p>
+      <p><strong>Ways I applied this at my job as a jr data scientist</strong> — I built a chronological data-extraction pipeline with LLM enrichment, and it maps onto the lifecycle stage by stage:</p>
+      <p>
+        • <em>Generation:</em> third-party websites and media platforms — source systems I don't own or control.<br>
+        • <em>Ingestion:</em> scraping the sources, discovering and downloading media files.<br>
+        • <em>Transformation:</em> speech-to-text on audio, then LLM-based parsing and enrichment of the resulting text.<br>
+        • <em>Storage (underneath everything):</em> a relational database through every stage + object storage for backups.<br>
+        • <em>Serving:</em> a progress dashboard, plus a controlled read interface for downstream analytical work — that handoff IS the serving stage.<br>
+        • No reverse ETL yet — that would be, say, pushing computed metrics from the database back into an operational system.
+      </p>
+      <p><strong>Undercurrents in that pipeline:</strong> security = least-privilege, read-only access for downstream consumers; data management = a documented schema, data-quality checks, quarantining bad records; DataOps = the daily scheduled run with guardrails, liveness/health monitoring, backups; orchestration = the scheduler deciding what runs when and in what order; architecture = the deliberate separation between ingestion and downstream insights; software engineering = tests, versioned schema migrations, dependency management.</p>
+      <p><strong>History:</strong> 1970s — birth of relational databases (and SQL). 1980s — the data warehouse: a separate database just for analysis (Inmon). 1990s — Kimball's dimensional data modeling, BI, and web-first companies straining backend systems. 2000s — big data: volume, velocity, variety; Google/Yahoo-scale problems produced tools like Hadoop, and AWS launched S3 + EC2 (2006), starting the cloud era. 2010s — the big-data toolset got commoditized and simplified. 2020s — the "data lifecycle engineer": abstract managed tools, integrated sources, unstructured data, LLM systems.</p>
+
+      <h4>Two things I flagged as unclear, now clear</h4>
+      <p><strong>"Bleeding-edge data tools" (2010s):</strong> "bleeding edge" means so new it hurts — in the early 2010s, using big-data tools (Hadoop, Spark, Kafka) meant assembling immature, poorly documented open-source pieces yourself and needing a team of specialists just to keep the cluster alive. The point of the decade was that this stopped: those capabilities became managed, simplified services anyone can rent.</p>
+      <p><strong>"Batch computing to event streaming":</strong> batch = process data in scheduled chunks (e.g. our pipeline runs once a day and processes everything new). Event streaming = process each event the moment it happens, continuously (a Kafka topic receiving every click as it occurs). The book's sharpest framing (Fundamentals, ch. 2): <em>virtually all data is born as a stream</em> — batch is just a convenient way of cutting that stream into chunks. My pipeline's daily run is a batch window over events that in reality happen continuously throughout the year.</p>
+
+      <h4>Tools</h4>
+      <p>First cloud vocabulary: <strong>Amazon EC2</strong> (rented virtual machines — budget VPS providers are the same idea for less), <strong>Amazon S3</strong> (object storage; cheaper S3-compatible clones speak the same API), <strong>DynamoDB</strong> (managed NoSQL key-value store), and the big three platforms <strong>AWS / Google Cloud / Azure</strong>. Added to the tools index above.</p>
+
+      <h4>Gotchas &amp; decisions</h4>
+      <p>• Source systems + ingestion are <em>the</em> biggest bottleneck of the whole lifecycle (Fundamentals, ch. 2) because you don't control the sources — they change formats, go down, or gate content whenever they want. I live this daily: every source site is different, and most of my pipeline's complexity is adapters and recovery logic for sources that misbehave.<br>
+        • Storage "temperatures": hot (accessed constantly, keep fast), lukewarm, cold (rarely touched, keep cheap — archival tiers). My pipeline's object-storage backups are cold storage by design.<br>
+        • Don't go streaming-first by default — adopt real-time only when a business case justifies the extra cost and complexity; batch is still right for most analytics and ML training (Fundamentals, ch. 2). Our daily cadence is a sound choice, not a limitation.<br>
+        • "Data vanity projects": data only has value when it's consumed. Collecting into a lake nobody queries is a classic failure — always know who the downstream consumer is before building.</p>
+
+      <h4>Deeper reading</h4>
+      <p><em>Fundamentals of Data Engineering</em>, ch. 2 (read alongside this module — it's the same framework, one level deeper). Two insights beyond the course: (1) the lifecycle stages aren't a neat sequence — they overlap and tangle, and many real systems occupy several stages at once (Kafka is ingestion + storage + query simultaneously; a cloud warehouse stores, transforms, and serves). (2) Reverse ETL exists because businesses run on SaaS tools — value often only materializes when warehouse insights land back inside the CRM/ads platform where operational people actually work. Next module pairs with ch. 3 (data architecture).</p>
+    </article>
+  </section>
+</main>
+</body>
+</html>
